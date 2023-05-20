@@ -37,6 +37,10 @@ async function run() {
       const result = await toysInfoDb.findOne({ _id: new ObjectId(id) });
       res.send(result);
     });
+    app.get("/all-toys", async (req, res) => {
+      const result = await toysInfoDb.find().toArray();
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
