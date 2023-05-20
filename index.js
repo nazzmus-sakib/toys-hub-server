@@ -2,11 +2,11 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = 3000;
+require("dotenv").config();
 app.use(cors());
 app.use(express.json());
-const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =
-  "mongodb+srv://toys-hub:dPH7Tyt5lakUWFnl@cluster0.xtgyyfk.mongodb.net/?retryWrites=true&w=majority";
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const uri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASS}@cluster0.xtgyyfk.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -30,6 +30,11 @@ async function run() {
     app.get("/toys-category/:category", async (req, res) => {
       const category = req.params.category;
       const result = await toysInfoDb.find({ category: category }).toArray();
+      res.send(result);
+    });
+    app.get("/details/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await toysInfoDb.findOne({ _id: new ObjectId(id) });
       res.send(result);
     });
     // Send a ping to confirm a successful connection
