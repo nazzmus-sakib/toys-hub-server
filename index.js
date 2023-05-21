@@ -52,6 +52,11 @@ async function run() {
       const result = await toysInfoDb.find(query).toArray();
       res.send(result);
     });
+    app.get("/single-toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await toysInfoDb.findOne({ _id: new ObjectId(id) });
+      res.send(result);
+    });
 
     const createIndex = toysInfoDb.createIndex({ toyName: 1 });
     app.get("/searchByToyName/:searchText", async (req, res) => {
