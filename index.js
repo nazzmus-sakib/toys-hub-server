@@ -42,8 +42,17 @@ async function run() {
       const result = await toysInfoDb.find().limit(20).toArray();
       res.send(result);
     });
-    // const keys = { toyName: 1 };
-    // const options = { name: searchToyName };
+    app.get("/my-toys", async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = {
+          sellerEmail: req.query.email,
+        };
+      }
+      const result = await toysInfoDb.find(query).toArray();
+      res.send(result);
+    });
+
     const createIndex = toysInfoDb.createIndex({ toyName: 1 });
     app.get("/searchByToyName/:searchText", async (req, res) => {
       const searchText = req.params.searchText;
