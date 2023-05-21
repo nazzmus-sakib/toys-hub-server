@@ -57,7 +57,22 @@ async function run() {
       const result = await toysInfoDb.findOne({ _id: new ObjectId(id) });
       res.send(result);
     });
-
+    app.put("/update-toy/:id", async (req, res) => {
+      const id = req.params.id;
+      const toy = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          price: toy.price,
+          quantity: toy.quantity,
+          description: toy.description,
+          toyName: toy.toyName,
+          photo: toy.photo,
+        },
+      };
+      const result = await toysInfoDb.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
     const createIndex = toysInfoDb.createIndex({ toyName: 1 });
     app.get("/searchByToyName/:searchText", async (req, res) => {
       const searchText = req.params.searchText;
