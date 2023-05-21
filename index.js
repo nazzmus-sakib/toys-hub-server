@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const port = 3000;
 require("dotenv").config();
+
 app.use(cors());
 app.use(express.json());
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -38,7 +39,19 @@ async function run() {
       res.send(result);
     });
     app.get("/all-toys", async (req, res) => {
-      const result = await toysInfoDb.find().toArray();
+      const result = await toysInfoDb.find().limit(20).toArray();
+      res.send(result);
+    });
+    // const keys = { toyName: 1 };
+    // const options = { name: searchToyName };
+    const createIndex = toysInfoDb.createIndex({ toyName: 1 });
+    app.get("/searchByToyName/:searchText", async (req, res) => {
+      const searchText = req.params.searchText;
+      const result = await toysInfoDb
+        .find({
+          toyName: { $regex: searchText, $options: "i" },
+        })
+        .toArray();
       res.send(result);
     });
     // Send a ping to confirm a successful connection
