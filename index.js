@@ -21,7 +21,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+
     const toysInfoDb = client.db("toys-hub").collection("toys-info");
     app.post("/toys-info", async (req, res) => {
       const toysInfo = req.body;
@@ -103,7 +103,8 @@ run().catch(console.dir);
 app.get("/", (req, res) => {
   res.send("server is running");
 });
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+await client.connect().then(() => {
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
 });
