@@ -89,11 +89,23 @@ async function run() {
       res.send(result);
     });
     app.get("/low-to-high", async (req, res) => {
-      const result = await toysInfoDb.find().sort({ price: 1 }).toArray();
+      let query = {};
+      if (req.query.email) {
+        query = {
+          sellerEmail: req.query.email,
+        };
+      }
+      const result = await toysInfoDb.find(query).sort({ price: 1 }).toArray();
       res.send(result);
     });
     app.get("/high-to-low", async (req, res) => {
-      const result = await toysInfoDb.find().sort({ price: -1 }).toArray();
+      let query = {};
+      if (req.query.email) {
+        query = {
+          sellerEmail: req.query.email,
+        };
+      }
+      const result = await toysInfoDb.find(query).sort({ price: -1 }).toArray();
       res.send(result);
     });
     // Send a ping to confirm a successful connection
