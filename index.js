@@ -78,7 +78,7 @@ async function run() {
       const result = await toysInfoDb.deleteOne({ _id: new ObjectId(id) });
       res.send(result);
     });
-    const createIndex = toysInfoDb.createIndex({ toyName: 1 });
+    // const createIndex = toysInfoDb.createIndex({ toyName: -1 });
     app.get("/searchByToyName/:searchText", async (req, res) => {
       const searchText = req.params.searchText;
       const result = await toysInfoDb
@@ -86,6 +86,14 @@ async function run() {
           toyName: { $regex: searchText, $options: "i" },
         })
         .toArray();
+      res.send(result);
+    });
+    app.get("/low-to-high", async (req, res) => {
+      const result = await toysInfoDb.find().sort({ price: 1 }).toArray();
+      res.send(result);
+    });
+    app.get("/high-to-low", async (req, res) => {
+      const result = await toysInfoDb.find().sort({ price: -1 }).toArray();
       res.send(result);
     });
     // Send a ping to confirm a successful connection
@@ -103,7 +111,8 @@ run().catch(console.dir);
 app.get("/", (req, res) => {
   res.send("server is running");
 });
-await client.connect().then(() => {
+//database connections
+client.connect().then(() => {
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
